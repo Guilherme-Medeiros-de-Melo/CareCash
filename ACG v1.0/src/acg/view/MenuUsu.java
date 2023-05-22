@@ -304,11 +304,7 @@ public class MenuUsu extends javax.swing.JFrame {
             int idS = (Integer)jTable1.getValueAt(gastoSelecionado, 0);
             String nomeS = (String) jTable1.getValueAt(gastoSelecionado, 1);
             String tipoS = (String) jTable1.getValueAt(gastoSelecionado, 2);
-            
-            
             float valorS = Float.parseFloat(jTable1.getValueAt(gastoSelecionado, 3).toString().substring(3).replace(",","."));
-            
-            
             Gasto gasS = new Gasto(idS, nomeS, tipoS, valorS);
             new AlterarGasto(gasS, usu, filtro, aux).setVisible(true);
             this.setVisible(false);
