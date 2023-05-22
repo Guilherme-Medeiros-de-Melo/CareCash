@@ -138,7 +138,7 @@
                 <Column editable="false" title="ID" type="java.lang.Integer"/>
                 <Column editable="false" title="Nome" type="java.lang.String"/>
                 <Column editable="false" title="Tipo" type="java.lang.String"/>
-                <Column editable="false" title="Valor" type="java.lang.Float"/>
+                <Column editable="false" title="Valor" type="java.lang.String"/>
                 <Column editable="false" title="Data" type="java.lang.String"/>
               </Table>
             </Property>

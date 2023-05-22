@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +42,7 @@ public class MenuUsu extends javax.swing.JFrame {
             jTable1.setValueAt(lista.get(i).getId(), i, 0);
             jTable1.setValueAt(lista.get(i).getNome(), i, 1);
             jTable1.setValueAt(lista.get(i).getTipo(), i, 2);
-            jTable1.setValueAt(lista.get(i).getValor(), i, 3);
+            jTable1.setValueAt("R$ " + String.valueOf(String.format("%.2f", lista.get(i).getValor())), i, 3);
             jTable1.setValueAt(lista.get(i).getData(), i, 4);
         }
     }
@@ -153,7 +154,7 @@ public class MenuUsu extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -303,7 +304,11 @@ public class MenuUsu extends javax.swing.JFrame {
             int idS = (Integer)jTable1.getValueAt(gastoSelecionado, 0);
             String nomeS = (String) jTable1.getValueAt(gastoSelecionado, 1);
             String tipoS = (String) jTable1.getValueAt(gastoSelecionado, 2);
-            float valorS = (float) jTable1.getValueAt(gastoSelecionado, 3);
+            
+            
+            float valorS = Float.parseFloat(jTable1.getValueAt(gastoSelecionado, 3).toString().substring(3).replace(",","."));
+            
+            
             Gasto gasS = new Gasto(idS, nomeS, tipoS, valorS);
             new AlterarGasto(gasS, usu, filtro, aux).setVisible(true);
             this.setVisible(false);
