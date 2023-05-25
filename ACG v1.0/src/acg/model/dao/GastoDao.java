@@ -136,6 +136,34 @@ public class GastoDao {
         return gass;
    }
     
+    /*public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
+        
+        List<Gasto> gass = new ArrayList<>();
+        
+        String sql = "Select * from gasto where idusuario = ? and id BETWEEN ? and ?;";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+            // seta os valores
+            stmt.setInt(1,gas.getIdusu());
+            stmt.setString(2,gas.getTipo());
+            // executa
+            ResultSet rs = stmt.executeQuery();
+           while (rs.next()) {      
+            // criando o objeto Usuario
+            Gasto gast = new Gasto(
+                rs.getInt(1),
+                rs.getInt(6),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getFloat(4),
+                rs.getDate(5)
+            );
+            // adiciona o usu à lista de usus
+            gass.add(gast);
+        }
+            stmt.close();
+        return gass;
+   }*/
+    
     public Gasto alterar(Gasto gas) throws SQLException{
         String sql = "UPDATE gasto SET Nome = ?, Tipo = ?, Valor = ? WHERE id = ?";
         // prepared statement para inserção

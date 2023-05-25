@@ -35,14 +35,14 @@ public class RelatorioDao {
         PreparedStatement stmt = this.c.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
         int proximo_id = 0;
-        Date data_fechamento;
+        Date data_fechamento = null;
         while (rs.next()) {      
             proximo_id = rs.getInt(1) + 1;
             data_fechamento = rs.getDate(2);
             }
             stmt.close();
         
-        sql = "insert into relatorio" + "(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
+        sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
                 + " values (?,?,?,?,?,?)";
         
         stmt = this.c.prepareStatement(sql);
@@ -50,14 +50,42 @@ public class RelatorioDao {
         stmt.setInt(1, usu.getId());
         stmt.setInt(2, proximo_id);
         stmt.setInt(3, Integer.parseInt(null));
-        stmt.setInt(4, Integer.parseInt(null));
+        stmt.setDate(4, data_fechamento);
         stmt.setFloat(5, usu.getSalario());
         stmt.setFloat(6, 0);
         
         stmt.executeQuery();
         
     }
-    //"insert into usuario" + " (Nome, Senha, Email, Salario)" + " values (?,?,?,?)";
+    
+    public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
+        
+        List<Gasto> gass = new ArrayList<>();
+        
+        String sql = "Select * from gasto where idusuario = ? and id BETWEEN ? and ?;";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+            // seta os valores
+            stmt.setInt(1,gas.getIdusu());
+            stmt.setString(2,gas.getTipo());
+            // executa
+            ResultSet rs = stmt.executeQuery();
+           while (rs.next()) {      
+            // criando o objeto Usuario
+            Gasto gast = new Gasto(
+                rs.getInt(1),
+                rs.getInt(6),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getFloat(4),
+                rs.getDate(5)
+            );
+            // adiciona o usu à lista de usus
+            gass.add(gast);
+        }
+            stmt.close();
+        return gass;
+   }
+    
     public Usuario buscar(Usuario usu) throws SQLException{
         String sql = "select * from usuario WHERE id = ?";
         PreparedStatement stmt = this.c.prepareStatement(sql);
