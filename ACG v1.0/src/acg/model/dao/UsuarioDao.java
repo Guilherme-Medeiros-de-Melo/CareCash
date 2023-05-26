@@ -26,7 +26,7 @@ public class UsuarioDao {
     }
 
     public Usuario buscar(Usuario usu) throws SQLException{
-        String sql = "select * from usuario WHERE id = ?";
+        String sql = "select * from usuario WHERE idusuario = ?";
         PreparedStatement stmt = this.c.prepareStatement(sql);
             // seta os valores
             stmt.setInt(1,usu.getId());

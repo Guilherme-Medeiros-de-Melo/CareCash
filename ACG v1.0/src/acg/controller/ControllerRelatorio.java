@@ -20,10 +20,9 @@ public class ControllerRelatorio {
 
      RelatorioDao daoRel = null;
     
-    public Usuario novoRel(Usuario usu)throws SQLException, ClassNotFoundException  {
+    public void novoRel(Usuario usu)throws SQLException, ClassNotFoundException  {
         daoRel = new RelatorioDao();
         daoRel.novoRel(usu);
-        return null;
     }
 
     public boolean isDiaDepoisFechamento(Date data, Usuario usu) throws SQLException, ClassNotFoundException {

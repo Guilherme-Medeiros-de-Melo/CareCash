@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +50,12 @@ public class RelatorioDao {
         
         stmt.setInt(1, usu.getId());
         stmt.setInt(2, proximo_id);
-        stmt.setInt(3, Integer.parseInt(null));
+        stmt.setObject(3, null, Types.INTEGER);
         stmt.setDate(4, data_fechamento);
         stmt.setFloat(5, usu.getSalario());
         stmt.setFloat(6, 0);
         
-        stmt.executeQuery();
+        stmt.executeUpdate();
         
     }
     
@@ -65,10 +66,12 @@ public class RelatorioDao {
         
         stmt.setInt(usu.getId(), 1);
         ResultSet rs = stmt.executeQuery();
-        Date data2 = Date.valueOf("0000-00-00");
+        Date data2 = null;
         while (rs.next()) {      
             data2 = rs.getDate(1);
         }
+        
+        System.out.println((data2 == data) + "\n" + data + "    " + data2);
         
         if (data.compareTo(data2) > 0){
             return true;

@@ -6,9 +6,12 @@
 package acg.view;
 
 import acg.controller.ControllerGasto;
+import acg.controller.ControllerRelatorio;
+import acg.controller.ControllerUsuario;
 import acg.model.bean.Gasto;
 import acg.model.bean.Usuario;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +28,12 @@ public class MenuUsu extends javax.swing.JFrame {
 
     String filtro = "";
     String aux = "";
-    ControllerGasto con = new ControllerGasto();
     int usu = 0;
+    ControllerGasto con = new ControllerGasto();
+    ControllerRelatorio rel = new ControllerRelatorio();
+    ControllerUsuario usuCon = new ControllerUsuario();
     List<Gasto> lista = new ArrayList<>();
+    
     /**
      * Creates new form MenuUsu
      */
@@ -73,15 +79,22 @@ public class MenuUsu extends javax.swing.JFrame {
         }
     }
     
-    public MenuUsu() {
+    public MenuUsu() throws SQLException, ClassNotFoundException {
         initComponents();
+        if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), new Usuario(usu))){
+            rel.novoRel(usuCon.buscar(new Usuario(usu)));
+        }
     }
     
-    public MenuUsu(int usu, String filtro, String aux){
+    public MenuUsu(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException{
         initComponents();
         this.usu = usu;
         this.filtro = filtro;
         this.aux = aux;
+        
+        if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), new Usuario(usu))){
+            rel.novoRel(usuCon.buscar(new Usuario(usu)));
+        }
         
         switch(filtro){
             case "": break;
@@ -364,7 +377,7 @@ public class MenuUsu extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[])  {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -391,7 +404,15 @@ public class MenuUsu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                try{
                 new MenuUsu().setVisible(true);
+                }
+                catch (SQLException ex){
+                    
+                }
+                catch (ClassNotFoundException ex){
+                    
+                }
             }
         });
     }

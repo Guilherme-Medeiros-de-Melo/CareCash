@@ -179,8 +179,15 @@ public class ManterGasto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTipActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try{
         new MenuUsu(usu, filtro, aux).setVisible(true);
         this.setVisible(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -209,6 +216,7 @@ public class ManterGasto extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDesFocusLost
 
     private void txtValFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtValFocusLost
+        txtVal.setText(txtVal.getText().replace(',', '.'));
         txtVal.setText(String.format(Locale.US,"%.2f", Float.parseFloat(txtVal.getText())));
         System.out.println(txtVal.getText().getClass());
     }//GEN-LAST:event_txtValFocusLost
