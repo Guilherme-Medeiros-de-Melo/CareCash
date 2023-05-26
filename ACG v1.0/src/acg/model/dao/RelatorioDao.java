@@ -43,6 +43,14 @@ public class RelatorioDao {
             }
             stmt.close();
         
+        sql = "Update relatorio set gasto_fim = ? where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?;";    
+            
+        stmt = this.c.prepareStatement(sql);
+        stmt.setInt(1, proximo_id - 1);
+        stmt.setInt(2, usu.getId());
+        
+        stmt.executeUpdate();
+            
         sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
                 + " values (?,?,?,?,?,?)";
         
@@ -73,12 +81,35 @@ public class RelatorioDao {
         
         System.out.println((data2 == data) + "\n" + data + "    " + data2);
         
+        try{
         if (data.compareTo(data2) > 0){
             return true;
         }
         else{
             return false;   
         }
+        }
+        catch (NullPointerException ex){
+            primeiroRelatorio(data, usu);
+            return false;
+        }
+    }
+    
+    public void primeiroRelatorio(Date data, Usuario usu) throws SQLException{
+        String sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
+                + " values (?,?,?,?,?,?)";
+        
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        stmt = this.c.prepareStatement(sql);
+        
+        stmt.setInt(1, usu.getId());
+        stmt.setInt(2, 1);
+        stmt.setObject(3, null, Types.INTEGER);
+        stmt.setDate(4, Date.valueOf(data.toLocalDate().plusDays(7)));
+        stmt.setFloat(5, usu.getSalario());
+        stmt.setFloat(6, 0);
+        
+        stmt.executeUpdate();
     }
     
     public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
@@ -108,6 +139,39 @@ public class RelatorioDao {
             stmt.close();
         return gass;
    }
+    
+    public void calcularGastoTotal(Usuario usu) throws SQLException {
+        List<Gasto> gass = new ArrayList<>();
+        int gasto_inicio = 0;
+        String sql = "select gasto_inicio from relatorio where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {      
+            gasto_inicio = rs.getInt(1);
+        }
+        
+        int gasto_final = 0;
+        sql = "select Max(id) from gasto";
+        stmt = this.c.prepareStatement(sql);
+        rs = stmt.executeQuery();
+        while (rs.next()) {      
+            gasto_final = rs.getInt(1);
+        }
+        
+        int soma_total = 0;
+        sql = "select Sum(valor) from gasto where idusuario = ? and id between ? and ?";
+        stmt = this.c.prepareStatement(sql);
+            
+            stmt.setInt(1, usu.getId());
+            stmt.setInt(1, gasto_inicio);
+            stmt.setInt(2,gasto_final);
+            // executa
+            rs = stmt.executeQuery();
+            while (rs.next()) {      
+            soma_total = rs.getInt(1);
+        }
+            stmt.close();
+    }
     
     public Gasto alterarGastoRelatorio(Gasto gas) throws SQLException{
         

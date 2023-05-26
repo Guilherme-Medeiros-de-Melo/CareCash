@@ -92,7 +92,7 @@ public class MenuUsu extends javax.swing.JFrame {
         this.filtro = filtro;
         this.aux = aux;
         
-        if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), new Usuario(usu))){
+        if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), usuCon.buscar(new Usuario(usu)))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
         }
         
