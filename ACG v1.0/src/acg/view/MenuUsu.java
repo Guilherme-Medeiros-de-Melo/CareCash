@@ -95,6 +95,7 @@ public class MenuUsu extends javax.swing.JFrame {
         if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), usuCon.buscar(new Usuario(usu)))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
         }
+        rel.calcularGastoTotal(new Usuario(usu));
         
         switch(filtro){
             case "": break;

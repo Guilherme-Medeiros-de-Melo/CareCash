@@ -145,6 +145,7 @@ public class RelatorioDao {
         int gasto_inicio = 0;
         String sql = "select gasto_inicio from relatorio where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
         PreparedStatement stmt = this.c.prepareStatement(sql);
+        stmt.setInt(1, usu.getId());
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {      
             gasto_inicio = rs.getInt(1);
@@ -163,13 +164,22 @@ public class RelatorioDao {
         stmt = this.c.prepareStatement(sql);
             
             stmt.setInt(1, usu.getId());
-            stmt.setInt(1, gasto_inicio);
-            stmt.setInt(2,gasto_final);
+            stmt.setInt(2, gasto_inicio);
+            stmt.setInt(3,gasto_final);
             // executa
             rs = stmt.executeQuery();
             while (rs.next()) {      
             soma_total = rs.getInt(1);
         }
+            
+        sql = "update relatorio set gasto_total = ? where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?;";
+        stmt = this.c.prepareStatement(sql);
+            
+            stmt.setInt(1, soma_total);
+            stmt.setInt(2, usu.getId());
+            
+            stmt.executeUpdate();
+            System.out.println(soma_total + " " + usu.getId());
             stmt.close();
     }
     

@@ -34,4 +34,9 @@ public class ControllerRelatorio {
         daoRel = new RelatorioDao();
         return daoRel.buscarGastoRelatorio(gas);
     }
+    
+    public void calcularGastoTotal(Usuario usu) throws SQLException, ClassNotFoundException{
+        daoRel = new RelatorioDao();
+        daoRel.calcularGastoTotal(usu);
+    }
 }
