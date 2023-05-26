@@ -58,6 +58,26 @@ public class RelatorioDao {
         
     }
     
+    public boolean isDiaDepoisFechamento(Date data, Usuario usu) throws SQLException{
+        String sql = "Select data_fechamento from relatorio where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
+        
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        
+        stmt.setInt(usu.getId(), 1);
+        ResultSet rs = stmt.executeQuery();
+        Date data2 = Date.valueOf("0000-00-00");
+        while (rs.next()) {      
+            data2 = rs.getDate(1);
+        }
+        
+        if (data.compareTo(data2) > 0){
+            return true;
+        }
+        else{
+            return false;   
+        }
+    }
+    
     public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
         
         List<Gasto> gass = new ArrayList<>();
@@ -79,13 +99,21 @@ public class RelatorioDao {
                 rs.getFloat(4),
                 rs.getDate(5)
             );
-            // adiciona o usu à lista de usus
+            
             gass.add(gast);
         }
             stmt.close();
         return gass;
    }
     
+    public Gasto alterarGastoRelatorio(Gasto gas) throws SQLException{
+        
+        List<Gasto> gass = new ArrayList<>();
+        
+        String sql = "";
+        return gas;
+    }
+    /*
     public Usuario buscar(Usuario usu) throws SQLException{
         String sql = "select * from usuario WHERE id = ?";
         PreparedStatement stmt = this.c.prepareStatement(sql);
@@ -108,4 +136,5 @@ public class RelatorioDao {
             stmt.close();
         return retorno;
    }
+*/
 }
