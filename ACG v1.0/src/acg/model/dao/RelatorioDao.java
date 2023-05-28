@@ -11,6 +11,7 @@ package acg.model.dao;
  */
 
 import acg.model.bean.Gasto;
+import acg.model.bean.Relatorio;
 import acg.model.bean.Usuario;
 import acg.util.Conexão;
 import java.sql.Connection;
@@ -123,6 +124,33 @@ public class RelatorioDao {
         stmt.executeUpdate();
     }
     
+    public List<Relatorio> buscarRelatorio(Usuario usu) throws SQLException{
+        
+        List<Relatorio> rel = new ArrayList<>();
+        
+        String sql = "Select * from relatorio where idusuario = ?";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+            
+            stmt.setInt(1,usu.getId());
+            
+            ResultSet rs = stmt.executeQuery();
+           while (rs.next()) {      
+            // criando o objeto Usuario
+            Relatorio rela = new Relatorio(
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getInt(3),
+                rs.getDate(4),
+                rs.getFloat(5),
+                rs.getFloat(6)
+            );
+            
+            rel.add(rela);
+        }
+            stmt.close();
+        return rel;
+   }
+    
     public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
         
         List<Gasto> gass = new ArrayList<>();
@@ -151,15 +179,18 @@ public class RelatorioDao {
         return gass;
    }
     
-    public void calcularGastoTotal(Usuario usu) throws SQLException {
+    public float calcularGastoTotal(Usuario usu) throws SQLException {
         List<Gasto> gass = new ArrayList<>();
         int gasto_inicio = 0;
-        String sql = "select gasto_inicio from relatorio where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
+        float salario = 0;
+        String sql = "select gasto_inicio, salario from relatorio where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
         PreparedStatement stmt = this.c.prepareStatement(sql);
         stmt.setInt(1, usu.getId());
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {      
             gasto_inicio = rs.getInt(1);
+            salario = rs.getFloat(2);
+            
         }
         
         int gasto_final = 0;
@@ -192,6 +223,7 @@ public class RelatorioDao {
             stmt.executeUpdate();
             System.out.println(soma_total + " " + usu.getId());
             stmt.close();
+            return salario - soma_total;
     }
     
     public Gasto alterarGastoRelatorio(Gasto gas) throws SQLException{

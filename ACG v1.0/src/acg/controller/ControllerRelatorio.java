@@ -10,6 +10,7 @@ package acg.controller;
  * @author Gui
  */
 import acg.model.bean.Gasto;
+import acg.model.bean.Relatorio;
 import acg.model.bean.Usuario;
 import acg.model.dao.RelatorioDao;
 import java.sql.SQLException;
@@ -30,14 +31,19 @@ public class ControllerRelatorio {
         return daoRel.isDiaDepoisFechamento(data, usu);
     }
     
+    public List<Relatorio> buscarRelatorio(Usuario usu) throws SQLException, ClassNotFoundException {
+        daoRel = new RelatorioDao();
+        return daoRel.buscarRelatorio(usu);
+    }
+    
     public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException, ClassNotFoundException {
         daoRel = new RelatorioDao();
         return daoRel.buscarGastoRelatorio(gas);
     }
     
-    public void calcularGastoTotal(Usuario usu) throws SQLException, ClassNotFoundException{
+    public float calcularGastoTotal(Usuario usu) throws SQLException, ClassNotFoundException{
         daoRel = new RelatorioDao();
-        daoRel.calcularGastoTotal(usu);
+        return daoRel.calcularGastoTotal(usu);
     }
     
     public void primeiroRelatorio(Date data, Usuario usu) throws SQLException, ClassNotFoundException{

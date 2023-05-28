@@ -10,6 +10,7 @@ import acg.controller.ControllerRelatorio;
 import acg.controller.ControllerUsuario;
 import acg.model.bean.Gasto;
 import acg.model.bean.Usuario;
+import java.awt.Color;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ public class MenuUsu extends javax.swing.JFrame {
     String filtro = "";
     String aux = "";
     int usu = 0;
+    float saldo = 0;
     ControllerGasto con = new ControllerGasto();
     ControllerRelatorio rel = new ControllerRelatorio();
     ControllerUsuario usuCon = new ControllerUsuario();
@@ -91,11 +93,23 @@ public class MenuUsu extends javax.swing.JFrame {
         this.usu = usu;
         this.filtro = filtro;
         this.aux = aux;
+        this.saldo = rel.calcularGastoTotal(new Usuario(usu));
         
+        if(saldo < 0){ 
+            txtSaldo.setText("Você já gastou R$" + String.format("%.2f", saldo).replace("-","").replace(".", ","));
+            txtSaldo.setForeground(Color.red);
+            txtSaldo2.setText("a mais do que o alocado para a semana!");
+            txtSaldo2.setForeground(Color.red);
+        }
+        else{
+            txtSaldo.setText("Você ainda está R$" + saldo);
+            txtSaldo.setForeground(Color.green);
+            txtSaldo2.setText("a baixo do alocado para a semana.");
+            txtSaldo2.setForeground(Color.green);
+        }
         if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), usuCon.buscar(new Usuario(usu)))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
         }
-        rel.calcularGastoTotal(new Usuario(usu));
         
         switch(filtro){
             case "": break;
@@ -131,6 +145,9 @@ public class MenuUsu extends javax.swing.JFrame {
         txtTipo = new javax.swing.JComboBox<>();
         txtAviso = new javax.swing.JLabel();
         txtAviso2 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
+        txtSaldo = new javax.swing.JLabel();
+        txtSaldo2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -237,57 +254,78 @@ public class MenuUsu extends javax.swing.JFrame {
         txtAviso2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtAviso2.setText(" ");
 
+        jButton8.setText("Ver Relatórios");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        txtSaldo.setText("Você já gastou R$100,00 a mais do que o previsto para essa semana!");
+
+        txtSaldo2.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Sair)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
-                    .addComponent(jButton7)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4)
-                            .addComponent(jButton5))
+                            .addComponent(txtSaldo2)
+                            .addComponent(txtSaldo)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton7, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtNome)
                             .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton6)
-                    .addComponent(jButton2)
-                    .addComponent(txtAviso)
-                    .addComponent(txtAviso2))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(txtAviso2)
+                    .addComponent(txtAviso))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4))
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton5)
                             .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton6))
-                        .addGap(33, 33, 33)
+                        .addGap(31, 31, 31)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
@@ -297,10 +335,17 @@ public class MenuUsu extends javax.swing.JFrame {
                         .addComponent(txtAviso)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtAviso2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Sair)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Sair, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtSaldo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSaldo2)))
                 .addContainerGap())
         );
 
@@ -356,6 +401,7 @@ public class MenuUsu extends javax.swing.JFrame {
             int idS = (Integer)jTable1.getValueAt(gastoSelecionado, 0);
             Gasto gasS = new Gasto(idS);
             con.excluir(gasS);
+            rel.calcularGastoTotal(new Usuario(usu));
             txtAviso.setText(" ");
             txtAviso2.setText(" ");
         }
@@ -374,6 +420,16 @@ public class MenuUsu extends javax.swing.JFrame {
     private void SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SairActionPerformed
         System.exit(0);
     }//GEN-LAST:event_SairActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        try{
+        new MenuRelatorio(usu, filtro, aux).setVisible(true);
+        this.setVisible(false);
+        }
+        catch (SQLException | ClassNotFoundException ex){
+            
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -427,6 +483,7 @@ public class MenuUsu extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
@@ -434,6 +491,8 @@ public class MenuUsu extends javax.swing.JFrame {
     private javax.swing.JLabel txtAviso2;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtNome;
+    private javax.swing.JLabel txtSaldo;
+    private javax.swing.JLabel txtSaldo2;
     private javax.swing.JComboBox<String> txtTipo;
     // End of variables declaration//GEN-END:variables
 }

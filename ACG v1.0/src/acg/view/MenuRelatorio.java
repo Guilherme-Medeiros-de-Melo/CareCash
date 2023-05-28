@@ -5,12 +5,27 @@
  */
 package acg.view;
 
+import acg.util.TabelaCustomizada;
+import acg.controller.ControllerRelatorio;
+import acg.model.bean.Relatorio;
+import acg.model.bean.Usuario;
+import java.awt.Color;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Gui
  */
 public class MenuRelatorio extends javax.swing.JFrame {
 
+    int usu;
+    String filtro, aux;
+    ControllerRelatorio rel = new ControllerRelatorio();
     /**
      * Creates new form MenuRelatorio
      */
@@ -18,6 +33,38 @@ public class MenuRelatorio extends javax.swing.JFrame {
         initComponents();
     }
 
+    public MenuRelatorio(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException {
+        try{
+        initComponents();
+        this.usu = usu;
+        this.filtro = filtro;
+        this.aux = aux;
+        construirTabela(rel.buscarRelatorio(new Usuario(usu)));
+        }
+        catch (SQLException | ClassNotFoundException ex){
+            
+        }
+    }
+    
+    public void construirTabela(List<Relatorio> lista) throws ClassNotFoundException{
+        
+        TabelaCustomizada renderer = new TabelaCustomizada();
+        
+        jTable1.setDefaultRenderer(Object.class, renderer);
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        for(int i = 0; i < lista.size(); i++){
+            if(jTable1.getRowCount() < lista.size()){
+                model.addRow(new Object[]{""});
+            }
+            jTable1.setValueAt(lista.get(i).getData_fechamento(), i, 0);
+            jTable1.setValueAt("R$ " + String.valueOf(String.format("%.2f", lista.get(i).getGasto_total())), i, 1);
+            jTable1.setValueAt("R$ " + String.valueOf(String.format("%.2f", lista.get(i).getSalario())), i, 2);
+            jTable1.setValueAt("R$ " + String.valueOf(String.format("%.2f", lista.get(i).getSalario() - lista.get(i).getGasto_total())), i, 3);
+            }
+        }
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,11 +89,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Semana", "Gasto Total", "Objetivo", "Saldo"
+                "Semana", "Gasto Total", "Salario", "Saldo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -63,6 +110,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
         });
 
         jButton2.setText("Voltar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -71,7 +123,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -82,14 +134,14 @@ public class MenuRelatorio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(101, 101, 101)
                         .addComponent(jButton1)
                         .addGap(95, 95, 95)
-                        .addComponent(jButton2)))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -98,6 +150,17 @@ public class MenuRelatorio extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try{
+        new MenuUsu(usu, filtro, aux).setVisible(true);
+        this.setVisible(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
