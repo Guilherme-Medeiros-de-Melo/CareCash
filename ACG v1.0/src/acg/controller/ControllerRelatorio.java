@@ -39,4 +39,9 @@ public class ControllerRelatorio {
         daoRel = new RelatorioDao();
         daoRel.calcularGastoTotal(usu);
     }
+    
+    public void primeiroRelatorio(Date data, Usuario usu) throws SQLException, ClassNotFoundException{
+        daoRel = new RelatorioDao();
+        daoRel.primeiroRelatorio(data, usu);
+    }
 }

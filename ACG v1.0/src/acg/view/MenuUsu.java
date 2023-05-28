@@ -83,7 +83,7 @@ public class MenuUsu extends javax.swing.JFrame {
         initComponents();
         if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), new Usuario(usu))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
-        }
+    }
     }
     
     public MenuUsu(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException{

@@ -31,7 +31,7 @@ public class RelatorioDao {
     }
     
     public void novoRel(Usuario usu) throws SQLException{
-        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 1 WEEK) FROM gasto";
+        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 6 DAY) FROM gasto";
         
         PreparedStatement stmt = this.c.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
@@ -72,7 +72,7 @@ public class RelatorioDao {
         
         PreparedStatement stmt = this.c.prepareStatement(sql);
         
-        stmt.setInt(usu.getId(), 1);
+        stmt.setInt(1, usu.getId());
         ResultSet rs = stmt.executeQuery();
         Date data2 = null;
         while (rs.next()) {      
@@ -96,16 +96,27 @@ public class RelatorioDao {
     }
     
     public void primeiroRelatorio(Date data, Usuario usu) throws SQLException{
-        String sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
-                + " values (?,?,?,?,?,?)";
+        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 6 DAY) FROM gasto";
         
         PreparedStatement stmt = this.c.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        int proximo_id = 0;
+        Date data_fechamento = null;
+        while (rs.next()) {      
+            proximo_id = rs.getInt(1);
+            data_fechamento = rs.getDate(2);
+            }
+            stmt.close();
+            
+        sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
+                + " values (?,?,?,?,?,?)";
+        
         stmt = this.c.prepareStatement(sql);
         
         stmt.setInt(1, usu.getId());
-        stmt.setInt(2, 1);
+        stmt.setInt(2, proximo_id);
         stmt.setObject(3, null, Types.INTEGER);
-        stmt.setDate(4, Date.valueOf(data.toLocalDate().plusDays(7)));
+        stmt.setDate(4, data_fechamento);
         stmt.setFloat(5, usu.getSalario());
         stmt.setFloat(6, 0);
         

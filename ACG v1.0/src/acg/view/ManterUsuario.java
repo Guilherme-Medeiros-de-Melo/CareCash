@@ -5,9 +5,12 @@
  */
 package acg.view;
 
+import acg.controller.ControllerRelatorio;
 import acg.controller.ControllerUsuario;
 import acg.model.bean.Usuario;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -173,12 +176,15 @@ public class ManterUsuario extends javax.swing.JFrame {
                 }  
             
             if (valido) {
-                con.inserir(usu);
+                usu = con.inserir(usu);
                 CampoErro.setText("Registrado com sucesso!");
                 txtUsu.setText("");
                 txtSen.setText("");
                 txtSal.setText("");
                 NomeErro.setText("");
+                
+                ControllerRelatorio rel = new ControllerRelatorio();
+                rel.primeiroRelatorio(Date.valueOf(LocalDate.now()), usu);
             }
             else{
                 valido = true;
