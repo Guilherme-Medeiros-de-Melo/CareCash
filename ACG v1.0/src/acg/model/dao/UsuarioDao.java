@@ -72,15 +72,14 @@ public class UsuarioDao {
    }
     
     public Usuario alterar(Usuario usu) throws SQLException{
-        String sql = "UPDATE usuario SET Nome = ?, Senha = ?, Email = ?, Salario = ? WHERE id = ?";
+        String sql = "UPDATE usuario SET Nome = ?, Senha = ?, Salario = ? WHERE idusuario = ?";
         // prepared statement para inserção
         PreparedStatement stmt = c.prepareStatement(sql);
         // seta os valores
         stmt.setString(1,usu.getNome());
         stmt.setString(2,usu.getSenha());
-        stmt.setString(3,usu.getEmail());
-        stmt.setFloat(4,usu.getSalario());
-        stmt.setInt(5,usu.getId());
+        stmt.setFloat(3,usu.getSalario());
+        stmt.setInt(4,usu.getId());
 
         // executa
         stmt.execute();

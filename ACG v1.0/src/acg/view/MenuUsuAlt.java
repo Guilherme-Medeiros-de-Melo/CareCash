@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author lab02aluno
  */
-public class MenuUsu extends javax.swing.JFrame {
+public class MenuUsuAlt extends javax.swing.JFrame {
 
     String filtro = "";
     String aux = "";
@@ -81,14 +81,14 @@ public class MenuUsu extends javax.swing.JFrame {
         }
     }
     
-    public MenuUsu() throws SQLException, ClassNotFoundException {
+    public MenuUsuAlt() throws SQLException, ClassNotFoundException {
         initComponents();
         if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), new Usuario(usu))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
     }
     }
     
-    public MenuUsu(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException{
+    public MenuUsuAlt(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException{
         initComponents();
         this.usu = usu;
         this.filtro = filtro;
@@ -480,21 +480,22 @@ public class MenuUsu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuUsu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MenuUsuAlt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuUsu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MenuUsuAlt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuUsu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MenuUsuAlt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuUsu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MenuUsuAlt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try{
-                new MenuUsu().setVisible(true);
+                new MenuUsuAlt().setVisible(true);
                 }
                 catch (SQLException ex){
                     

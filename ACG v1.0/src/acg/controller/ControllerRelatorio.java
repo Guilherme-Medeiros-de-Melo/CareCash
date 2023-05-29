@@ -50,4 +50,9 @@ public class ControllerRelatorio {
         daoRel = new RelatorioDao();
         daoRel.primeiroRelatorio(data, usu);
     }
+    
+    public void alterarRelatorio(Usuario usu) throws SQLException, ClassNotFoundException{
+        daoRel = new RelatorioDao();
+        daoRel.alterarRelatorio(usu);
+    }
 }

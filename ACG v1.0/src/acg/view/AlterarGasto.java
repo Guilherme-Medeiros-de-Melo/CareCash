@@ -29,6 +29,10 @@ public class AlterarGasto extends javax.swing.JFrame {
     public AlterarGasto() {
         initComponents();
     }
+    
+    public AlterarGasto(int usu, String filtro, String aux) {
+        initComponents();
+    }
 
     public AlterarGasto(Gasto gas, int usu, String filtro, String aux) {
         initComponents();

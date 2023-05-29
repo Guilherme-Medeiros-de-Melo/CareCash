@@ -228,10 +228,20 @@ public class RelatorioDao {
     
     public Gasto alterarGastoRelatorio(Gasto gas) throws SQLException{
         
+        
         List<Gasto> gass = new ArrayList<>();
         
         String sql = "";
         return gas;
+    }
+    
+    public void alterarRelatorio(Usuario usu) throws SQLException{
+        String sql = "update relatorio set salario = ? where idusuario = ? and data_fechamento = (Select MAX(data_fechamento) from relatorio);";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        stmt.setFloat(1, usu.getSalario());
+        stmt.setInt(2, usu.getId());
+        
+        stmt.executeUpdate();
     }
     /*
     public Usuario buscar(Usuario usu) throws SQLException{
