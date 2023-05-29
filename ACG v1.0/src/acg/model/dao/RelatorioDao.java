@@ -151,15 +151,58 @@ public class RelatorioDao {
         return rel;
    }
     
-    public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException{
+    public List<Relatorio> buscarUmRelatorio(Relatorio re) throws SQLException{
+        
+        List<Relatorio> rel = new ArrayList<>();
+        
+        String sql = "Select * from relatorio where idusuario = ? and data_fechamento = ?";
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+            
+            stmt.setInt(1,re.getIdusuario());
+            stmt.setDate(2,re.getData_fechamento());
+            
+            
+            
+            ResultSet rs = stmt.executeQuery();
+           while (rs.next()) {      
+            // criando o objeto Usuario
+            Relatorio rela = new Relatorio(
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getInt(3),
+                rs.getDate(4),
+                rs.getFloat(5),
+                rs.getFloat(6)
+            );
+            
+            rel.add(rela);
+        }
+            stmt.close();
+        return rel;
+   }
+    
+    public List<Gasto> buscarGastoRelatorio(Relatorio rel) throws SQLException{
         
         List<Gasto> gass = new ArrayList<>();
         
-        String sql = "Select * from gasto where idusuario = ? and id BETWEEN ? and ?;";
+        String sql = "";
         PreparedStatement stmt = this.c.prepareStatement(sql);
+        
+        if (rel.getGasto_fim() > 0){
+        sql = "Select * from gasto where idusuario = ? and id BETWEEN ? and ?;";
+        stmt = this.c.prepareStatement(sql);
             // seta os valores
-            stmt.setInt(1,gas.getIdusu());
-            stmt.setString(2,gas.getTipo());
+            stmt.setInt(1,rel.getIdusuario());
+            stmt.setInt(2,rel.getGasto_inicio());
+            stmt.setInt(3,rel.getGasto_fim());
+        }
+        else{
+            sql = "Select * from gasto where idusuario = ? and id BETWEEN ? and (Select MAX(id) from gasto);";
+        stmt = this.c.prepareStatement(sql);
+            // seta os valores
+            stmt.setInt(1,rel.getIdusuario());
+            stmt.setInt(2,rel.getGasto_inicio());
+        }
             // executa
             ResultSet rs = stmt.executeQuery();
            while (rs.next()) {      

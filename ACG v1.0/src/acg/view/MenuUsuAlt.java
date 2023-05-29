@@ -9,6 +9,7 @@ import acg.controller.ControllerGasto;
 import acg.controller.ControllerRelatorio;
 import acg.controller.ControllerUsuario;
 import acg.model.bean.Gasto;
+import acg.model.bean.Relatorio;
 import acg.model.bean.Usuario;
 import java.awt.Color;
 import java.sql.Date;
@@ -30,6 +31,7 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     String filtro = "";
     String aux = "";
     int usu = 0;
+    Relatorio re = new Relatorio();
     float saldo = 0;
     ControllerGasto con = new ControllerGasto();
     ControllerRelatorio rel = new ControllerRelatorio();
@@ -57,23 +59,8 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     
     public void filtrar(){
         try{
-        if (filtro.equals("Nenhum")){
-            lista = con.listar(new Usuario(usu));
+            lista = rel.buscarGastoRelatorio(re);
             construirTabela(lista);
-        } else if (filtro.equals("Nome")){
-            lista = con.buscarNome(new Gasto(usu, txtNome.getText()));
-            aux = txtNome.getText();
-            construirTabela(lista);
-        } else if (filtro.equals("Tipo")){
-            lista = con.buscarTipo(new Gasto((String) txtTipo.getSelectedItem(), usu));
-            aux = (String) txtTipo.getSelectedItem();
-            construirTabela(lista);
-        } else if (filtro.equals("Data")){
-            lista = con.buscarData(new Gasto(usu, Date.valueOf(txtData.getText())));
-            aux = txtData.getText();
-            construirTabela(lista);
-        }
-        
         } catch (SQLException ex) {
             Logger.getLogger(LoginUsu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -88,25 +75,14 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     }
     }
     
-    public MenuUsuAlt(int usu, String filtro, String aux) throws SQLException, ClassNotFoundException{
+    public MenuUsuAlt(int usu, String filtro, String aux, Relatorio re) throws SQLException, ClassNotFoundException{
         initComponents();
         this.usu = usu;
         this.filtro = filtro;
         this.aux = aux;
+        this.re = re;
         this.saldo = rel.calcularGastoTotal(new Usuario(usu));
         
-        if(saldo < 0){ 
-            txtSaldo.setText("Você já gastou R$" + String.format("%.2f", saldo).replace("-","").replace(".", ","));
-            txtSaldo.setForeground(Color.red);
-            txtSaldo2.setText("a mais do que o alocado para a semana!");
-            txtSaldo2.setForeground(Color.red);
-        }
-        else{
-            txtSaldo.setText("Você ainda está R$" + saldo);
-            txtSaldo.setForeground(Color.green);
-            txtSaldo2.setText("a baixo do alocado para a semana.");
-            txtSaldo2.setForeground(Color.green);
-        }
         if (rel.isDiaDepoisFechamento(Date.valueOf(LocalDate.now()), usuCon.buscar(new Usuario(usu)))){
             rel.novoRel(usuCon.buscar(new Usuario(usu)));
         }
@@ -145,10 +121,6 @@ public class MenuUsuAlt extends javax.swing.JFrame {
         txtTipo = new javax.swing.JComboBox<>();
         txtAviso = new javax.swing.JLabel();
         txtAviso2 = new javax.swing.JLabel();
-        jButton8 = new javax.swing.JButton();
-        txtSaldo = new javax.swing.JLabel();
-        txtSaldo2 = new javax.swing.JLabel();
-        jButton9 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -240,7 +212,7 @@ public class MenuUsuAlt extends javax.swing.JFrame {
             }
         });
 
-        Sair.setText("Sair");
+        Sair.setText("Voltar");
         Sair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SairActionPerformed(evt);
@@ -255,42 +227,17 @@ public class MenuUsuAlt extends javax.swing.JFrame {
         txtAviso2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtAviso2.setText(" ");
 
-        jButton8.setText("Ver Relatórios");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
-
-        txtSaldo.setText("Você já gastou R$100,00 a mais do que o previsto para essa semana!");
-
-        txtSaldo2.setText("jLabel2");
-
-        jButton9.setText("Opções");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
+                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSaldo2)
-                            .addComponent(txtSaldo)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -307,28 +254,21 @@ public class MenuUsuAlt extends javax.swing.JFrame {
                                 .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(txtAviso2)
                             .addComponent(txtAviso))
-                        .addGap(0, 1, Short.MAX_VALUE))
+                        .addGap(0, 12, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtAviso2)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton7)
@@ -344,31 +284,22 @@ public class MenuUsuAlt extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton6))
-                        .addGap(31, 31, 31)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtAviso)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAviso2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(Sair)
-                        .addComponent(jButton9))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(txtSaldo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSaldo2)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAviso)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAviso2))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Sair)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -443,26 +374,6 @@ public class MenuUsuAlt extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_SairActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        try{
-        new MenuRelatorio(usu, filtro, aux).setVisible(true);
-        this.setVisible(false);
-        }
-        catch (SQLException | ClassNotFoundException ex){
-            
-        }
-    }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        //try{
-        new AlterarUsuario(usu, filtro, aux).setVisible(true);
-        this.setVisible(false);
-        //}
-        //catch (SQLException | ClassNotFoundException ex){
-            
-        //}
-    }//GEN-LAST:event_jButton9ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -516,8 +427,6 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
@@ -525,8 +434,6 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     private javax.swing.JLabel txtAviso2;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JLabel txtSaldo;
-    private javax.swing.JLabel txtSaldo2;
     private javax.swing.JComboBox<String> txtTipo;
     // End of variables declaration//GEN-END:variables
 }

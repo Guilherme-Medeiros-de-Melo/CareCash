@@ -36,9 +36,14 @@ public class ControllerRelatorio {
         return daoRel.buscarRelatorio(usu);
     }
     
-    public List<Gasto> buscarGastoRelatorio(Gasto gas) throws SQLException, ClassNotFoundException {
+    public List<Relatorio> buscarUmRelatorio(Relatorio rel) throws SQLException, ClassNotFoundException {
         daoRel = new RelatorioDao();
-        return daoRel.buscarGastoRelatorio(gas);
+        return daoRel.buscarUmRelatorio(rel);
+    }
+    
+    public List<Gasto> buscarGastoRelatorio(Relatorio rel) throws SQLException, ClassNotFoundException {
+        daoRel = new RelatorioDao();
+        return daoRel.buscarGastoRelatorio(rel);
     }
     
     public float calcularGastoTotal(Usuario usu) throws SQLException, ClassNotFoundException{

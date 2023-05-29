@@ -25,6 +25,10 @@ public class Relatorio {
         this.gasto_total = gasto_total;
     }
 
+    public Relatorio() {
+        
+    }
+
     public int getIdusuario() {
         return idusuario;
     }
@@ -47,6 +51,11 @@ public class Relatorio {
 
     public float getGasto_total() {
         return gasto_total;
+    }
+
+    @Override
+    public String toString() {
+        return "Relatorio{" + "idusuario=" + idusuario + ", gasto_inicio=" + gasto_inicio + ", gasto_fim=" + gasto_fim + ", data_fechamento=" + data_fechamento + ", salario=" + salario + ", gasto_total=" + gasto_total + '}';
     }
     
     
