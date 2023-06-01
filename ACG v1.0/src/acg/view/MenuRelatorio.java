@@ -12,9 +12,11 @@ import acg.model.bean.Usuario;
 import java.awt.Color;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -120,8 +122,11 @@ public class MenuRelatorio extends javax.swing.JFrame {
         });
 
         jButton3.setText("Fechar relatorio");
-
-        txtRel.setText("jLabel1");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,9 +141,9 @@ public class MenuRelatorio extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
+                        .addGap(18, 18, 18)
                         .addComponent(txtRel)))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
@@ -153,7 +158,7 @@ public class MenuRelatorio extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addGap(39, 39, 39)
+                        .addGap(18, 18, 18)
                         .addComponent(txtRel))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(35, Short.MAX_VALUE))
@@ -195,6 +200,19 @@ public class MenuRelatorio extends javax.swing.JFrame {
             Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String[] a = {"SIM", "NÃO"};
+        int confirma = JOptionPane.showOptionDialog(null, "Você tem certeza que quer fechar o orçamento hoje?\n Você não poderá inserir gastos até o dia seguinte.", "CONFIRMAÇÃO", 0, 3, null, a , a[0]);
+        if (confirma == 0){
+            try{
+                rel.fechaRelAnt(new Usuario(usu), Date.valueOf(LocalDate.now()));
+            }
+            catch (SQLException | ClassNotFoundException ex){
+                
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

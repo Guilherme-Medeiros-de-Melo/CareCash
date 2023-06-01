@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +31,7 @@ public class MenuUsu extends javax.swing.JFrame {
     String filtro = "";
     String aux = "";
     int usu = 0;
+    boolean block = false;
     float saldo = 0;
     ControllerGasto con = new ControllerGasto();
     ControllerRelatorio rel = new ControllerRelatorio();
@@ -118,6 +120,8 @@ public class MenuUsu extends javax.swing.JFrame {
             case "Data": txtData.setText(aux); break;
         }
         filtrar();
+        
+        this.block = rel.bloquearGasto(new Usuario(usu));
     }
 
     /**
@@ -375,8 +379,13 @@ public class MenuUsu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new ManterGasto(usu, filtro, aux).setVisible(true);
-        this.setVisible(false);
+        if(block == false){
+            new ManterGasto(usu, filtro, aux).setVisible(true);
+            this.setVisible(false);
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Com o relatório já fechado hoje, \nvocê não pode mais inserir gastos até amanhã! ");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

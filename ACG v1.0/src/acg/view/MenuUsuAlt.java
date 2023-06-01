@@ -371,7 +371,14 @@ public class MenuUsuAlt extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SairActionPerformed
-        System.exit(0);
+        try{
+        new MenuRelatorio(usu, filtro, aux).setVisible(true);
+        this.setVisible(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterGasto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_SairActionPerformed
 
     /**

@@ -60,4 +60,14 @@ public class ControllerRelatorio {
         daoRel = new RelatorioDao();
         daoRel.alterarRelatorio(usu);
     }
+    
+    public void fechaRelAnt(Usuario usu, Date data)throws SQLException, ClassNotFoundException  {
+        daoRel = new RelatorioDao();
+        daoRel.fechaRelAnt(usu, data);
+    }
+    
+    public boolean bloquearGasto(Usuario usu)throws SQLException, ClassNotFoundException  {
+        daoRel = new RelatorioDao();
+        return daoRel.bloquearGasto(usu);
+    }
 }

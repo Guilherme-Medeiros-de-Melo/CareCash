@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class RelatorioDao {
     }
     
     public void novoRel(Usuario usu) throws SQLException{
-        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 6 DAY) FROM gasto";
+        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 7 DAY) FROM gasto";
         
         PreparedStatement stmt = this.c.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
@@ -44,6 +45,15 @@ public class RelatorioDao {
             }
             stmt.close();
         
+        sql = "Select Date_add(Max(data_fechamento), INTERVAL 7 day) from relatorio where idusuario = ?";    
+        stmt = this.c.prepareStatement(sql);
+        stmt.setInt(1, usu.getId());
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            data_fechamento = rs.getDate(1);
+            }
+            stmt.close();
+            
         sql = "Update relatorio set gasto_fim = ? where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?;";    
             
         stmt = this.c.prepareStatement(sql);
@@ -97,7 +107,7 @@ public class RelatorioDao {
     }
     
     public void primeiroRelatorio(Date data, Usuario usu) throws SQLException{
-        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 6 DAY) FROM gasto";
+        String sql = "SELECT ifnull(MAX(id), 0), ifnull(DATE_ADD(MAX(data), INTERVAL 7 DAY), Date_add(Current_date(), Interval 6 day)) FROM gasto;";
         
         PreparedStatement stmt = this.c.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery();
@@ -109,17 +119,16 @@ public class RelatorioDao {
             }
             stmt.close();
             
-        sql = "insert into relatorio(idusuario, gasto_inicio, gasto_fim, data_fechamento, salario, gasto_total)"
-                + " values (?,?,?,?,?,?)";
+        sql = "insert into relatorio(idusuario, gasto_inicio, data_fechamento, salario, gasto_total)"
+                + " values (?,?,?,?,?)";
         
         stmt = this.c.prepareStatement(sql);
         
         stmt.setInt(1, usu.getId());
         stmt.setInt(2, proximo_id);
-        stmt.setObject(3, null, Types.INTEGER);
-        stmt.setDate(4, data_fechamento);
-        stmt.setFloat(5, usu.getSalario());
-        stmt.setFloat(6, 0);
+        stmt.setDate(3, data_fechamento);
+        stmt.setFloat(4, usu.getSalario());
+        stmt.setFloat(5, 0);
         
         stmt.executeUpdate();
     }
@@ -285,6 +294,56 @@ public class RelatorioDao {
         stmt.setInt(2, usu.getId());
         
         stmt.executeUpdate();
+    }
+    
+    public void fechaRelAnt(Usuario usu, Date data) throws SQLException{
+        String sql = "SELECT MAX(id), DATE_ADD(MAX(data), INTERVAL 6 DAY) FROM gasto";
+        
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+        int proximo_id = 0;
+        Date data_fechamento = null;
+        while (rs.next()) {      
+            proximo_id = rs.getInt(1) + 1;
+            data_fechamento = rs.getDate(2);
+            }
+            stmt.close();
+        
+        sql = "Update relatorio set gasto_fim = ?, data_fechamento = ? where data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?;";    
+            
+        stmt = this.c.prepareStatement(sql);
+        stmt.setInt(1, proximo_id - 1);
+        stmt.setDate(2, data);
+        stmt.setInt(3, usu.getId());
+        
+        stmt.executeUpdate();
+        
+    }
+    
+        public boolean bloquearGasto (Usuario usu) throws SQLException{
+            String sql = "SELECT ifnull(gasto_fim, 0), data_fechamento from relatorio where "
+                    + "data_fechamento = (Select MAX(data_fechamento) from relatorio) and idusuario = ?";
+        
+        PreparedStatement stmt = this.c.prepareStatement(sql);
+        Integer gasto_fim = 0;
+        Date data = Date.valueOf("0001-01-01");
+        stmt.setInt(1, usu.getId());
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {      
+            gasto_fim = rs.getInt(1);
+            data = rs.getDate(2);
+        }
+        stmt.close();
+        
+            System.out.println(gasto_fim + "   " + data);
+        if(gasto_fim > 0){
+            System.out.println("true");
+            return true;
+        }
+        else{ 
+            System.out.println("false");
+            return false;
+        }
     }
     /*
     public Usuario buscar(Usuario usu) throws SQLException{
