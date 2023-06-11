@@ -89,7 +89,7 @@ public class ManterUsuario extends javax.swing.JFrame {
         jLabel5.setText("preencha o campo salário com uma estimativa de quanto ganha");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel7.setText("em uma semana ou que pretende gastar no mesmo período");
+        jLabel7.setText("em uma semana ou que pretende gastar no mesmo período.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
