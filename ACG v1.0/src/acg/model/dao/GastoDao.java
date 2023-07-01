@@ -257,10 +257,10 @@ public class GastoDao {
     public Gasto inserir(Gasto gas) throws SQLException{
         String sql = "insert into gasto" + " (IdUsuario, Nome, Tipo, Valor, Data)" + " values (?,?,?,?,?)";
     
-        // prepared statement para inserção
+        // prepared statement para inserção no BD
         PreparedStatement stmt = c.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 
-        // seta os valores
+        // atribui os valores
         stmt.setInt(1, gas.getIdusu());
         stmt.setString(2,gas.getNome());
         stmt.setString(3,gas.getTipo());
@@ -277,6 +277,4 @@ public class GastoDao {
         stmt.close();
         return gas;
     }
-
- 
 }
