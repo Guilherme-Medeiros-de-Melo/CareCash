@@ -49,7 +49,7 @@ public class MenuUsu extends javax.swing.JFrame {
             if(jTable1.getRowCount() < lista.size()){
                 model.addRow(new Object[]{""});
             }
-            jTable1.setValueAt(lista.get(i).getId(), i, 0);
+            jTable1.setValueAt((i+1), i, 0);
             jTable1.setValueAt(lista.get(i).getNome(), i, 1);
             jTable1.setValueAt(lista.get(i).getTipo(), i, 2);
             jTable1.setValueAt("R$ " + String.valueOf(String.format("%.2f", lista.get(i).getValor())), i, 3);

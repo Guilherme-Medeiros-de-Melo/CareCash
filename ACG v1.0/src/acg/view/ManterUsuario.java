@@ -11,6 +11,7 @@ import acg.model.bean.Usuario;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,7 +50,6 @@ public class ManterUsuario extends javax.swing.JFrame {
         CampoErro = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,6 +58,12 @@ public class ManterUsuario extends javax.swing.JFrame {
         jLabel1.setText("Usuário:");
 
         jLabel2.setText("Senha:");
+
+        txtSal.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSalFocusLost(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("REGISTRO");
@@ -83,13 +89,10 @@ public class ManterUsuario extends javax.swing.JFrame {
         CampoErro.setText(" ");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Este programa usa relatórios semanais, então recomendamos que");
+        jLabel3.setText("Este programa usa relatórios semanais, preencha o campo salário");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel5.setText("preencha o campo salário com uma estimativa de quanto ganha");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel7.setText("em uma semana ou que pretende gastar no mesmo período.");
+        jLabel5.setText("com uma estimativa de quanto ganha em uma semana.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,7 +113,6 @@ public class ManterUsuario extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel7)
                             .addComponent(jLabel5)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(NomeErro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -124,7 +126,7 @@ public class ManterUsuario extends javax.swing.JFrame {
                                         .addComponent(txtUsu)
                                         .addComponent(txtSal)
                                         .addComponent(txtSen, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 16, Short.MAX_VALUE))))
+                        .addGap(0, 22, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(CampoErro, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -153,9 +155,7 @@ public class ManterUsuario extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
+                .addGap(39, 39, 39)
                 .addComponent(CampoErro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -222,6 +222,12 @@ public class ManterUsuario extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void txtSalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSalFocusLost
+        txtSal.setText(txtSal.getText().replace(',', '.'));
+        txtSal.setText(String.format(Locale.US,"%.2f", Float.parseFloat(txtSal.getText())));
+        System.out.println(txtSal.getText().getClass());
+    }//GEN-LAST:event_txtSalFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -268,7 +274,6 @@ public class ManterUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField txtSal;
     private javax.swing.JPasswordField txtSen;
     private javax.swing.JTextField txtUsu;
